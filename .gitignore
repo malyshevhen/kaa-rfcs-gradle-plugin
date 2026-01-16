@@ -3,3 +3,11 @@
 
 # Ignore Gradle build output directory
 build
+
+# Eclipse specific files and directories
+.settings/
+.classpath
+.project
+bin/
+.metadata/
+.recommenders/
