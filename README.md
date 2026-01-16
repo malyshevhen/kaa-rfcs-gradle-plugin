@@ -1,5 +1,6 @@
 # Kaa RFCs Gradle Plugin
 
+![Build Status](https://github.com/malyshevhen/kaa-rfcs-gradle-plugin/actions/workflows/ci.yml/badge.svg)
 [![Release](https://img.shields.io/github/v/release/malyshevhen/kaa-rfcs-gradle-plugin?include_prereleases)](https://github.com/malyshevhen/kaa-rfcs-gradle-plugin/releases)
 [![JitPack](https://jitpack.io/v/malyshevhen/kaa-rfcs-gradle-plugin.svg)](https://jitpack.io/github/malyshevhen/kaa-rfcs-gradle-plugin)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
