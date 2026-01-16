@@ -6,9 +6,10 @@ import static com.github.malyshevhen.gradle.avro.Constants.DEFAULT_GEN_DIR;
 import static com.github.malyshevhen.gradle.avro.Constants.DEFAULT_SCHEMA_DIR;
 import static com.github.malyshevhen.gradle.avro.Constants.EXTRACT_TASK_NAME;
 import static com.github.malyshevhen.gradle.avro.Constants.GROUP;
+import static com.github.malyshevhen.gradle.avro.Constants.IDEA_MODULE_TASK;
+import static com.github.malyshevhen.gradle.avro.Constants.MAIN_SOURCE_SET;
 
 import com.github.davidmc24.gradle.plugin.avro.GenerateAvroJavaTask;
-import java.util.Arrays;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPluginExtension;
@@ -23,11 +24,11 @@ import org.gradle.api.tasks.TaskProvider;
  */
 public class KaaRfcsPlugin implements Plugin<Project> {
 
-  private static final String[] DEPENDENCIES = {AVRO_PLUGIN_ID, "java", "idea"};
-
   @Override
   public void apply(Project project) {
-    Arrays.asList(DEPENDENCIES).forEach(project.getPluginManager()::apply);
+    project.getPluginManager().apply(AVRO_PLUGIN_ID);
+    project.getPluginManager().apply("java");
+    project.getPluginManager().apply("idea");
 
     AvroSyncExtension extension =
         project.getExtensions().create("kaaAvro", AvroSyncExtension.class);
@@ -35,7 +36,14 @@ public class KaaRfcsPlugin implements Plugin<Project> {
 
     TaskProvider<ExtractKaaSchemasTask> extractTask = registerExtractTask(project, extension);
 
-    project.getTasks().named("ideaModule").configure(module -> module.dependsOn(extractTask));
+    project.afterEvaluate(
+        p -> {
+          try {
+            p.getTasks().named(IDEA_MODULE_TASK).configure(module -> module.dependsOn(extractTask));
+          } catch (org.gradle.api.UnknownTaskException e) {
+            // IDEA module task not available (IDEA plugin not applied), silently skip
+          }
+        });
 
     configureAvroGeneration(project, extractTask, extension);
     configureProjectLifecycle(project, extension);
@@ -75,7 +83,9 @@ public class KaaRfcsPlugin implements Plugin<Project> {
         .configureEach(
             avroTask -> {
               avroTask.source(extractTask);
-              avroTask.setOutputDir(project.file(extension.getGeneratedSrc().get()));
+              if (extension.getGeneratedSrc().isPresent()) {
+                avroTask.setOutputDir(project.file(extension.getGeneratedSrc().get()));
+              }
               avroTask.getConventionMapping().map("stringType", () -> "String");
             });
   }
@@ -89,7 +99,7 @@ public class KaaRfcsPlugin implements Plugin<Project> {
         .getSourceSets()
         .configureEach(
             ss -> {
-              if (ss.getName().equals("main")) {
+              if (ss.getName().equals(MAIN_SOURCE_SET)) {
                 ss.getJava().srcDir(extension.getGeneratedSrc());
               }
             });
@@ -111,8 +121,8 @@ public class KaaRfcsPlugin implements Plugin<Project> {
             cleanTask ->
                 cleanTask.doFirst(
                     t -> {
-                      project.delete(extension.getAvroSchemaSrc());
-                      project.delete(extension.getGeneratedSrc());
+                      project.delete(extension.getAvroSchemaSrc().get());
+                      project.delete(extension.getGeneratedSrc().get());
                     }));
   }
 }

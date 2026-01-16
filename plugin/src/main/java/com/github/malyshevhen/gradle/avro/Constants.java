@@ -28,5 +28,11 @@ public final class Constants {
   /** Maven coordinate for the Avro runtime dependency required by generated code. */
   public static final String AVRO_RUNTIME_DEPENDENCY = "org.apache.avro:avro:1.11.3";
 
+  /** The name of the IDEA module task. */
+  public static final String IDEA_MODULE_TASK = "ideaModule";
+
+  /** The name of the main source set. */
+  public static final String MAIN_SOURCE_SET = "main";
+
   private Constants() {}
 }

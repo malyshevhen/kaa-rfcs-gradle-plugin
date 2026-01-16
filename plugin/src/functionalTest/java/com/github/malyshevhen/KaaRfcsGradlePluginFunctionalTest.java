@@ -2,6 +2,7 @@ package com.github.malyshevhen;
 
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
+import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class KaaRfcsGradlePluginFunctionalTest {
@@ -43,8 +45,11 @@ class KaaRfcsGradlePluginFunctionalTest {
         .withArguments("generateAvroJava")
         .build();
 
-    // 3. Assert Task Success
-    assertTrue(result.getOutput().contains("SUCCESS"), "Build should succeed");
+    // 3. Assert Task Success - check actual task outcome
+    assertEquals(
+        org.gradle.testkit.runner.TaskOutcome.SUCCESS,
+        result.task(":generateAvroJava").getOutcome(),
+        "generateAvroJava task should succeed");
 
     // 4. VERIFICATION: Check extracted .avsc files
     File extractedSchema = new File(projectDir, "build/kaa-schemas/0004-client-data.avsc");

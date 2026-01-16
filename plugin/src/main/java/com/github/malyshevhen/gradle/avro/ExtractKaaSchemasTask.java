@@ -47,7 +47,10 @@ public abstract class ExtractKaaSchemasTask extends DefaultTask {
     URL resourceUrl = getClass().getClassLoader().getResource(resourcePath);
 
     if (resourceUrl == null) {
-      throw new RuntimeException("Missing internal resource: " + resourcePath);
+      throw new RuntimeException(
+          "Failed to extract Kaa Avro schemas. Internal resource '"
+              + resourcePath
+              + "' not found in plugin JAR. This indicates a plugin packaging issue.");
     }
 
     getProject()
@@ -55,7 +58,14 @@ public abstract class ExtractKaaSchemasTask extends DefaultTask {
             spec -> {
               if ("jar".equals(resourceUrl.getProtocol())) {
                 String path = resourceUrl.getPath();
-                String jarPath = path.substring(5, path.indexOf("!"));
+                int separatorIndex = path.indexOf("!");
+                if (separatorIndex == -1) {
+                  throw new RuntimeException(
+                      "Malformed JAR URL: missing '!' separator in '"
+                          + path
+                          + "'. This indicates a plugin packaging issue.");
+                }
+                String jarPath = path.substring(5, separatorIndex);
                 spec.from(
                     getProject().zipTree(new File(jarPath)),
                     jarSpec -> {
