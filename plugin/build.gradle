@@ -1,6 +1,7 @@
 plugins {
     id 'java-gradle-plugin'
     id 'maven-publish'
+    id 'jacoco'
 }
 
 // 1. Project Metadata
@@ -83,4 +84,30 @@ publishing {
             }
         }
     }
+}
+
+// 4. JaCoCo Code Coverage Configuration
+jacoco {
+    toolVersion = '0.8.11'
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.5
+            }
+        }
+    }
+}
+
+tasks.named('check') {
+    dependsOn(tasks.jacocoTestReport)
 }
