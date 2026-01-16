@@ -1,0 +1,3 @@
+[submodule "plugin/src/main/resources/avro-schemas"]
+	path = plugin/src/main/resources/avro-schemas
+	url = https://github.com/kaaproject/kaa-rfcs.git
