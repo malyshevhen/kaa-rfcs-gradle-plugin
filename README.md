@@ -23,7 +23,7 @@ the standard build lifecycle.
 
 ## Installation
 
-As this plugin is hosted on JitPack, the repository must be defined in your plugin management block.
+As this plugin is hosted on [JitPack](https://jitpack.io/#malyshevhen/kaa-rfcs-gradle-plugin), the repository must be defined in your plugin management block.
 
 ### 1. Define Repository
 

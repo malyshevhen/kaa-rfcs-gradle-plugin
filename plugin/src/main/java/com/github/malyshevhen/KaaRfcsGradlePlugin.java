@@ -13,7 +13,7 @@ import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.tasks.TaskProvider;
 
-public class KaaRfcsGradlePluginPlugin implements Plugin<Project> {
+public class KaaRfcsGradlePlugin implements Plugin<Project> {
 
   @Override
   public void apply(Project project) {
