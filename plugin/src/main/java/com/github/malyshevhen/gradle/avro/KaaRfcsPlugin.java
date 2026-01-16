@@ -83,6 +83,7 @@ public class KaaRfcsPlugin implements Plugin<Project> {
         .configureEach(
             avroTask -> {
               avroTask.source(extractTask);
+              avroTask.dependsOn(extractTask);
               if (extension.getGeneratedSrc().isPresent()) {
                 avroTask.setOutputDir(project.file(extension.getGeneratedSrc().get()));
               }
