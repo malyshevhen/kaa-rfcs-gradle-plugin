@@ -5,7 +5,7 @@
 [![JitPack](https://jitpack.io/v/malyshevhen/kaa-rfcs-gradle-plugin.svg)](https://jitpack.io/github/malyshevhen/kaa-rfcs-gradle-plugin)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A zero-configuration Gradle plugin that bundles Kaa RFC Avro Schemas and automates Java SpecificRecord generation within
+A zero-configuration Gradle plugin that bundles [Kaa RFC Avro Schemas](https://github.com/kaaproject/kaa-rfcs) and automates Java SpecificRecord generation within
 the standard build lifecycle.
 
 ## Features
