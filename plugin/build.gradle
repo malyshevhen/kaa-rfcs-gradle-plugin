@@ -16,7 +16,7 @@ dependencies {
 gradlePlugin {
     plugins {
         greeting {
-            id = 'kaa-rfcs-gradle-plugin'
+            id = 'kaa.rfcs-gradle-plugin'
             implementationClass = 'com.github.malyshevhen.KaaRfcsGradlePluginPlugin'
         }
     }
