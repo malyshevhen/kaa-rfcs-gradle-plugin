@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class KaaRfcsGradlePluginPluginFunctionalTest {
+
   @TempDir
   File projectDir;
 
@@ -20,14 +21,16 @@ class KaaRfcsGradlePluginPluginFunctionalTest {
   void pluginExtractsAndGeneratesJava() throws IOException {
     // 1. Set up a dummy consumer project
     String buildFileContent =
-        "plugins {\n" +
-            "    id 'java'\n" +
-            "    id 'kaa.rfcs-gradle-plugin'\n" +
-            "}\n" +
-            "repositories { mavenCentral() }\n" +
-            "dependencies {\n" +
-            "    implementation 'org.apache.avro:avro:1.11.3'\n" +
-            "}\n";
+        """
+            plugins {
+                id 'java'
+                id 'kaa.rfcs-gradle-plugin'
+            }
+            repositories { mavenCentral() }
+            dependencies {
+                implementation 'org.apache.avro:avro:1.11.3'
+            }
+            """;
 
     Files.writeString(projectDir.toPath().resolve("build.gradle"), buildFileContent);
     Files.writeString(projectDir.toPath().resolve("settings.gradle"), "rootProject.name = 'kaa-test'");
@@ -48,14 +51,11 @@ class KaaRfcsGradlePluginPluginFunctionalTest {
     assertTrue(extractedSchema.exists(), "Schema file 0004-client-data.avsc was not extracted");
 
     // 5. VERIFICATION: Check generated .java files
-    // We look for a class generated from one of the schemas.
-    // Note: Replace 'org.kaaproject.kaa.common.channels' with the actual namespace defined in your .avsc files
     Path generatedJavaFile = projectDir.toPath().resolve(
-        "build/generated/sources/avro/java/test/org/kaaproject/kaa/common/channels/ClientData.java"
+        "build/generated/sources/avro/java/main/org/kaaproject/kaa/common/channels/ClientData.java"
     );
 
-    // If you aren't sure of the exact package yet, we can perform a broader check:
-    File generatedDir = new File(projectDir, "build/generated/sources/avro/java/test");
+    File generatedDir = new File(projectDir, "build/generated/sources/avro/java/main");
     assertTrue(generatedDir.exists() && generatedDir.isDirectory(), "Generated Java directory does not exist");
 
     // Assert that at least some .java files were created

@@ -1,10 +1,10 @@
 package com.github.malyshevhen;
 
-import org.gradle.api.provider.Property;
+import org.gradle.api.file.DirectoryProperty;
 
-public interface AvroSyncExtension {
+public abstract class AvroSyncExtension {
 
-  Property<String> getAvroSchemaSrc();
+  public abstract DirectoryProperty getAvroSchemaSrc();
 
-  Property<String> getGeneratedSrc();
+  public abstract DirectoryProperty getGeneratedSrc();
 }
