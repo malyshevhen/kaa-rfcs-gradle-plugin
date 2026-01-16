@@ -3,6 +3,15 @@ plugins {
     id 'maven-publish'
 }
 
+// 1. Project Metadata
+group = 'com.github.malyshevhen'
+// Dynamically set version from GitHub Tag (v1.2.3 -> 1.2.3) or fallback to SNAPSHOT
+version = project.findProperty('projectVersion') ?: '0.0.1-SNAPSHOT'
+
+java {
+    withSourcesJar()
+}
+
 repositories {
     mavenCentral()
 }
@@ -10,22 +19,23 @@ repositories {
 dependencies {
     implementation libs.gradle.avro
 
+    // Testing dependencies
     testImplementation libs.junit.jupiter
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 gradlePlugin {
     plugins {
-        greeting {
+        kaaAvro {
             id = 'kaa.rfcs-gradle-plugin'
             implementationClass = 'com.github.malyshevhen.KaaRfcsGradlePluginPlugin'
         }
     }
 }
 
+// 2. Functional Testing Setup
 sourceSets {
-    functionalTest {
-    }
+    functionalTest {}
 }
 
 configurations.functionalTestImplementation.extendsFrom(configurations.testImplementation)
@@ -47,15 +57,15 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-group = 'com.github.malyshevhen'
-version = '0.0.1'
-
+// 3. Publishing Configuration
 publishing {
     repositories {
         maven {
             name = "GitHubPackages"
             url = "https://maven.pkg.github.com/malyshevhen/kaa-rfcs-gradle-plugin"
             credentials {
+                // In CI, these are provided by GitHub Actions
+                // Locally, you can set them in your environment
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
             }
