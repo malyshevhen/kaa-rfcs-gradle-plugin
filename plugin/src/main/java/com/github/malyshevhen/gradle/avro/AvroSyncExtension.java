@@ -1,4 +1,4 @@
-package com.github.malyshevhen;
+package com.github.malyshevhen.gradle.avro;
 
 import org.gradle.api.file.DirectoryProperty;
 

@@ -1,25 +1,26 @@
-package com.github.malyshevhen;
+package com.github.malyshevhen.gradle.avro;
 
-import static com.github.malyshevhen.KaaPluginConstants.AVRO_PLUGIN_ID;
-import static com.github.malyshevhen.KaaPluginConstants.AVRO_RUNTIME_DEPENDENCY;
-import static com.github.malyshevhen.KaaPluginConstants.DEFAULT_GEN_DIR;
-import static com.github.malyshevhen.KaaPluginConstants.DEFAULT_SCHEMA_DIR;
-import static com.github.malyshevhen.KaaPluginConstants.EXTRACT_TASK_NAME;
-import static com.github.malyshevhen.KaaPluginConstants.GROUP;
+import static com.github.malyshevhen.gradle.avro.Constants.AVRO_PLUGIN_ID;
+import static com.github.malyshevhen.gradle.avro.Constants.AVRO_RUNTIME_DEPENDENCY;
+import static com.github.malyshevhen.gradle.avro.Constants.DEFAULT_GEN_DIR;
+import static com.github.malyshevhen.gradle.avro.Constants.DEFAULT_SCHEMA_DIR;
+import static com.github.malyshevhen.gradle.avro.Constants.EXTRACT_TASK_NAME;
+import static com.github.malyshevhen.gradle.avro.Constants.GROUP;
 
 import com.github.davidmc24.gradle.plugin.avro.GenerateAvroJavaTask;
+import java.util.Arrays;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.tasks.TaskProvider;
 
-public class KaaRfcsGradlePlugin implements Plugin<Project> {
+public class KaaRfcsPlugin implements Plugin<Project> {
+
+  private static final String[] DEPENDENCIES = {AVRO_PLUGIN_ID, "java", "idea"};
 
   @Override
   public void apply(Project project) {
-    project.getPluginManager().apply(AVRO_PLUGIN_ID);
-    project.getPluginManager().apply("java");
-    project.getPluginManager().apply("idea");
+    Arrays.asList(DEPENDENCIES).forEach(project.getPluginManager()::apply);
 
     AvroSyncExtension extension = project.getExtensions().create("kaaAvro", AvroSyncExtension.class);
     configureDefaults(project, extension);
@@ -76,11 +77,9 @@ public class KaaRfcsGradlePlugin implements Plugin<Project> {
    * Ensures that 'clean' task removes the plugin's generated directories.
    */
   private void configureCleanup(Project project, AvroSyncExtension extension) {
-    project.getTasks().named("clean").configure(cleanTask -> {
-      cleanTask.doFirst(t -> {
-        project.delete(extension.getAvroSchemaSrc());
-        project.delete(extension.getGeneratedSrc());
-      });
-    });
+    project.getTasks().named("clean").configure(cleanTask -> cleanTask.doFirst(t -> {
+      project.delete(extension.getAvroSchemaSrc());
+      project.delete(extension.getGeneratedSrc());
+    }));
   }
 }

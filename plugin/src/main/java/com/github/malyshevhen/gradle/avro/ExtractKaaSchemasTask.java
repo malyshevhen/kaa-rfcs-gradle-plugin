@@ -1,12 +1,13 @@
-package com.github.malyshevhen;
-
-import org.gradle.api.DefaultTask;
-import org.gradle.api.file.DirectoryProperty;
-import org.gradle.api.file.RelativePath;
-import org.gradle.api.tasks.*;
+package com.github.malyshevhen.gradle.avro;
 
 import java.io.File;
 import java.net.URL;
+import org.gradle.api.DefaultTask;
+import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.file.RelativePath;
+import org.gradle.api.tasks.CacheableTask;
+import org.gradle.api.tasks.OutputDirectory;
+import org.gradle.api.tasks.TaskAction;
 
 @CacheableTask
 public abstract class ExtractKaaSchemasTask extends DefaultTask {
@@ -16,7 +17,7 @@ public abstract class ExtractKaaSchemasTask extends DefaultTask {
 
   @TaskAction
   public void extract() {
-    String resourcePath = KaaPluginConstants.SCHEMAS_RESOURCE_PATH;
+    String resourcePath = Constants.SCHEMAS_RESOURCE_PATH;
     URL resourceUrl = getClass().getClassLoader().getResource(resourcePath);
 
     if (resourceUrl == null) {

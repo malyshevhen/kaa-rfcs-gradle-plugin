@@ -28,7 +28,7 @@ gradlePlugin {
     plugins {
         kaaAvro {
             id = 'kaa.rfcs-gradle-plugin'
-            implementationClass = 'com.github.malyshevhen.KaaRfcsGradlePlugin'
+            implementationClass = 'com.github.malyshevhen.gradle.avro.KaaRfcsPlugin'
         }
     }
 }
