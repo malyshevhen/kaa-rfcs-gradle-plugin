@@ -17,6 +17,9 @@ jobs:
   test:
     name: Run All Tests (Java ${{ matrix.java }})
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: read
     strategy:
       fail-fast: false
       matrix:
