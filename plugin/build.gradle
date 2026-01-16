@@ -57,8 +57,19 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+base {
+    archivesName = "kaa-rfcs-gradle-plugin"
+}
+
 // 3. Publishing Configuration
 publishing {
+    publications {
+        // This is the default name the java-gradle-plugin gives to your main JAR
+        pluginMaven(MavenPublication) {
+            artifactId = "kaa-rfcs-gradle-plugin"
+        }
+    }
+
     repositories {
         maven {
             name = "GitHubPackages"
