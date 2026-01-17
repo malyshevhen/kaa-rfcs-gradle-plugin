@@ -4,9 +4,7 @@ plugins {
     id 'jacoco'
 }
 
-// 1. Project Metadata
 group = 'com.github.malyshevhen'
-// Dynamically set version from GitHub Tag (v1.2.3 -> 1.2.3) or fallback to SNAPSHOT
 version = project.findProperty('projectVersion') ?: '0.0.1-SNAPSHOT'
 
 java {
@@ -35,7 +33,6 @@ gradlePlugin {
     }
 }
 
-// 2. Functional Testing Setup
 sourceSets {
     functionalTest {}
 }
@@ -63,10 +60,8 @@ base {
     archivesName = "kaa-rfcs-gradle-plugin"
 }
 
-// 3. Publishing Configuration
 publishing {
     publications {
-        // This is the default name the java-gradle-plugin gives to your main JAR
         pluginMaven(MavenPublication) {
             artifactId = "kaa-rfcs-gradle-plugin"
         }
@@ -77,8 +72,6 @@ publishing {
             name = "GitHubPackages"
             url = "https://maven.pkg.github.com/malyshevhen/kaa-rfcs-gradle-plugin"
             credentials {
-                // In CI, these are provided by GitHub Actions
-                // Locally, you can set them in your environment
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
             }
@@ -86,7 +79,6 @@ publishing {
     }
 }
 
-// 4. JaCoCo Code Coverage Configuration
 jacoco {
     toolVersion = '0.8.11'
 }
