@@ -2,7 +2,6 @@ package com.github.malyshevhen;
 
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
-import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -16,8 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class KaaRfcsGradlePluginFunctionalTest {
 
-  @TempDir
-  File projectDir;
+  @TempDir File projectDir;
 
   @Test
   void pluginExtractsAndGeneratesJava() throws IOException {
@@ -35,15 +33,17 @@ class KaaRfcsGradlePluginFunctionalTest {
             """;
 
     Files.writeString(projectDir.toPath().resolve("build.gradle"), buildFileContent);
-    Files.writeString(projectDir.toPath().resolve("settings.gradle"), "rootProject.name = 'kaa-test'");
+    Files.writeString(
+        projectDir.toPath().resolve("settings.gradle"), "rootProject.name = 'kaa-test'");
 
     // 2. Run the full generation task
-    BuildResult result = GradleRunner.create()
-        .forwardOutput()
-        .withPluginClasspath()
-        .withProjectDir(projectDir)
-        .withArguments("generateAvroJava")
-        .build();
+    BuildResult result =
+        GradleRunner.create()
+            .forwardOutput()
+            .withPluginClasspath()
+            .withProjectDir(projectDir)
+            .withArguments("generateAvroJava")
+            .build();
 
     // 3. Assert Task Success - check actual task outcome
     assertEquals(
@@ -56,17 +56,20 @@ class KaaRfcsGradlePluginFunctionalTest {
     assertTrue(extractedSchema.exists(), "Schema file 0004-client-data.avsc was not extracted");
 
     // 5. VERIFICATION: Check generated .java files
-    Path generatedJavaFile = projectDir.toPath().resolve(
-        "build/generated/sources/avro/java/main/org/kaaproject/kaa/common/channels/ClientData.java"
-    );
+    Path generatedJavaFile =
+        projectDir
+            .toPath()
+            .resolve(
+                "build/generated/sources/avro/java/main/org/kaaproject/kaa/common/channels/ClientData.java");
 
     File generatedDir = new File(projectDir, "build/generated/sources/avro/java/main");
-    assertTrue(generatedDir.exists() && generatedDir.isDirectory(), "Generated Java directory does not exist");
+    assertTrue(
+        generatedDir.exists() && generatedDir.isDirectory(),
+        "Generated Java directory does not exist");
 
     // Assert that at least some .java files were created
-    long javaFileCount = Files.walk(generatedDir.toPath())
-        .filter(p -> p.toString().endsWith(".java"))
-        .count();
+    long javaFileCount =
+        Files.walk(generatedDir.toPath()).filter(p -> p.toString().endsWith(".java")).count();
 
     assertTrue(javaFileCount > 0, "No Java files were generated from the Avro schemas");
     System.out.println("Successfully verified " + javaFileCount + " generated Java files.");

@@ -36,6 +36,14 @@ public class KaaRfcsPlugin implements Plugin<Project> {
 
     TaskProvider<ExtractKaaSchemasTask> extractTask = registerExtractTask(project, extension);
 
+    configureIdeaModule(project, extractTask);
+    configureAvroGeneration(project, extractTask, extension);
+    configureProjectLifecycle(project, extension);
+    configureCleanup(project, extension);
+  }
+
+  private void configureIdeaModule(
+      Project project, TaskProvider<ExtractKaaSchemasTask> extractTask) {
     project.afterEvaluate(
         p -> {
           try {
@@ -44,10 +52,6 @@ public class KaaRfcsPlugin implements Plugin<Project> {
             // IDEA module task not available (IDEA plugin not applied), silently skip
           }
         });
-
-    configureAvroGeneration(project, extractTask, extension);
-    configureProjectLifecycle(project, extension);
-    configureCleanup(project, extension);
   }
 
   private void configureDefaults(Project project, AvroSyncExtension extension) {
